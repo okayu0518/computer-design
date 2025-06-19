@@ -4,7 +4,7 @@
 
 # ModelSim/QuestaSim 関連ファイル
 *.cr.mti
-*.mpf
+# *.mpf
 transcript
 *.wlf
 vsim.wlf
