@@ -21,6 +21,7 @@ always @( posedge CLK ) begin
 end
 
 /* 1Hzのイネーブル信号 */
-assign EN1HZ = (cnt==26'd49_999_999);
+//assign EN1HZ = (cnt==26'd49_999_999);
+assign EN1HZ = (cnt==26'd9);
 
 endmodule

@@ -2,47 +2,46 @@ module CLOCK1 (
     input   CLK, RST,
     input       [9:0]   SW,
     input       [1:0]   KEY,
-    output reg  [2:0]   BOUT
+    output      [3:0]    sec1,
+    output      [2:0]    sec10,
+    output      [3:0]    min1,
+    output      [2:0]    min10,
+    output   CA
 );
 
-/* 50MHzを1250000分周して40Hzを作る              */
-/* en40hzはシステムクロック1周期分のパルスで40Hz */
-reg [20:0] cnt;
+	wire en1hz, ca;
+	wire secup, minup, clr;
 
-wire en40hz = (cnt==1250000-1);
-
-always @( posedge CLK ) begin
-    if ( RST )
-        cnt <= 21'b0;
-    else if ( en40hz )
-        cnt <= 21'b0;
-    else
-        cnt <= cnt + 21'b1;
-end
-
-/*  ボタン入力をFF2個で受ける*/
-reg [2:0] ff1, ff2;
-
-always @( posedge CLK ) begin
-    if ( RST ) begin
-        ff2 <=3'b0;
-        ff1 <=3'b0;
-    end
-    else if ( en40hz ) begin
-        ff2 <= ff1;
-        ff1 <= nBIN;
-    end
-end
-
-/* ボタンは押すと0なので、立下りを検出 */
-wire [2:0] temp = ~ff1 & ff2 & {3{en40hz}};
-
-/* 念のためFFで受ける */
-always @( posedge CLK ) begin
-    if ( RST )
-        BOUT <=3'b0;
-    else
-        BOUT <=temp;
-end
+	BTN_IN btn_in (
+		.CLK(CLK),
+		.RST(RST),
+		.nBIN({KEY[1:0], SW[0]}),
+		.BOUT({secup, minup, clr})
+	);
+	CNT1SEC cnt1sec (
+		.CLK(CLK),
+		.RST(RST),
+		.EN1HZ(en1hz)
+	);
+	CNT60 cntsec (
+		.CLK(CLK),
+		.RST(RST),
+		.CLR(SW[0]),
+		.EN(en1hz),
+		.INC(SW[1]),
+		.QH(sec10),
+		.QL(sec1),
+		.CA(ca)
+	);
+	CNT60 cntmin (
+		.CLK(CLK),
+		.RST(RST),
+		.CLR(SW[0]),
+		.EN(ca),
+		.INC(SW[2]),
+		.QH(min10),
+		.QL(min1),
+		.CA(CA)
+	);
 
 endmodule
