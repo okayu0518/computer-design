@@ -5,7 +5,8 @@ output [3:0] QL;
 output CA;
 reg [2:0] QH;
 reg [3:0] QL;
-reg CA10, CA6, EN10;
+reg CA10, CA6;
+wire EN10;
 
 assign EN10 = EN | INC;
 
@@ -34,6 +35,7 @@ always @(posedge CLK) begin
 	end
 end
 
-assign CA = CA10 & CA6 & EN;
+assign CA = (QL==4'd9) && (QH==3'd5) && EN10;
+//assign CA = CA10 & CA6 & EN;
 
 endmodule
