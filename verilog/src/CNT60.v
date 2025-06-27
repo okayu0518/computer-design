@@ -2,11 +2,10 @@ module CNT60 (CLK, RST, CLR, EN, INC, QH, QL, CA);
 input CLK, RST, CLR, EN, INC;
 output [2:0] QH;
 output [3:0] QL;
-output reg CA;
+output CA;
 reg [2:0] QH;
 reg [3:0] QL;
-wire ca10;
-wire EN10;
+wire ca10, EN10, CA;
 
 assign EN10 = EN | INC;
 assign ca10 = (QL == 4'd9) & EN10;

@@ -9,9 +9,8 @@ parameter PERIOD=10;  // (clock period)/2
     reg       [9:0]   sw;
     reg       [1:0]   key;
 // wires                                               
-    wire [3:0] sec1, min1;
-    wire [2:0] sec10, min10;
     wire CA;
+    wire [7:0] nHEX0, nHEX1, nHEX2, nHEX3;
 
 // assign statements (if any)                          
 CLOCK1 u1 (
@@ -20,10 +19,10 @@ CLOCK1 u1 (
     .RST(rst),
     .SW(sw),
     .KEY(key),
-    .sec1(sec1),
-    .sec10(sec10),
-    .min1(min1),
-    .min10(min10),
+    .HEX0(nHEX0),
+    .HEX1(nHEX1),
+    .HEX2(nHEX2),
+    .HEX3(nHEX3),
     .CA(CA)
 );
 
@@ -43,6 +42,9 @@ end
 always #(PERIOD/2) clk = ~clk;
 
 // sw, key
+initial begin
+	sw[9] = 1'b0;
+end
 
 
 endmodule
